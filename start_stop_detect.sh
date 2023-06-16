@@ -46,7 +46,7 @@ while true; do
 
         RESPONSE=$(curl -s "$URL")
         PLAYERS=$(echo "$RESPONSE" | jq -r '.players.online')
-        ONLINE=$(echo "$RESPONSE" | jq -r '.ONLINE')
+        ONLINE=$(echo "$RESPONSE" | jq -r '.online')
 
         if [ "$ONLINE" = "false" ]; then
             screen -X -S $SCREEN_NAME kill
