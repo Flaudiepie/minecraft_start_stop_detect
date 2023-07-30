@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto";
 import Server from "./interfaces/server";
-import checkMcPort from "./portChecker";
-import serversJson from "../servers.json";
+import checkMcPort from "./util/portChecker";
 import fs from "fs";
+import { getServerJson } from "./util/checkForJson";
 
 export class MinecraftServerInstance {
   name: string;
@@ -29,7 +29,7 @@ export class MinecraftServerInstance {
   public start() {}
 
   public add() {
-    const servers: Server[] = serversJson;
+    const servers: Server[] = JSON.parse(getServerJson());
     servers.push({
       startScriptPath: this.startScriptPath,
       port: this.port,
@@ -40,13 +40,13 @@ export class MinecraftServerInstance {
   }
 
   public remove() {
-    const servers: Server[] = serversJson;
+    const servers: Server[] = JSON.parse(getServerJson());
     const newServerJson = servers.filter((value) => value.id !== this.id);
     fs.writeFileSync("servers.json", JSON.stringify(newServerJson));
   }
 
   public static getAllServers(): MinecraftServerInstance[] {
-    return serversJson.map((server: Server) => {
+    return JSON.parse(getServerJson()).map((server: Server) => {
       return new MinecraftServerInstance(
         server.startScriptPath,
         server.port,
